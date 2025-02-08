@@ -1,0 +1,52 @@
+{{ define "content" }}
+
+{{ range . }}
+
+<div class="container" id="{{ .Id }}" style="margin-top: 40px;">
+    <div class="row">
+        <div class="col s12 m12 l10 offset-l1">
+        <div class="card">
+            <div class="card-content">
+            <span class="card-title"  style="font-size: xx-large;">{{ .Title }}</span>
+            <p>{{ .Description }}</p>
+            <br>
+            <ul>
+                <li>
+                    Is Public: <span>{{ .Public }}</span>
+                </li>
+                <li>
+                    Created At: <span>{{ .CreatedAt }}</span>
+                </li>
+                <li>
+                    Updated At: <span>{{ .UpdatedAt }}</span>
+                </li>
+            </ul>
+            </div>
+            <div class="card-action">
+                <a href="/admin/edit-article?id={{ .Id }}">Edit</a>
+                <a onclick="deleteArticle('{{ .Id }}')" href="#">Delete</a>
+            </div>
+        </div>
+        </div>
+    </div>
+</div>
+
+{{ end }}
+
+<script>
+    async function deleteArticle(id) {
+        try {
+            const response = await fetch("/articles/delete?id=" + id, { method: "DELETE" });
+            if (!response.ok) {
+                throw new Error(`Response status: ${response.status}`);
+            }
+            document.getElementById(id).innerHTML = ""
+            const json = await response.json();
+            console.log(json);
+        } catch (error) {
+            console.error(error.message);
+        }
+    }
+</script>
+
+{{ end }}

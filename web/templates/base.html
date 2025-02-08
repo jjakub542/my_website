@@ -1,0 +1,85 @@
+{{ define "base.html" }}
+
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+        <title>Hello</title>
+        <style>
+            .nav-wrapper li:hover {
+                background-color: rgb(53, 53, 53);
+            }
+
+            .sidenav li:hover {
+                background-color: rgb(53, 53, 53);
+            }
+
+            .container-post {
+                color: rgb(238, 238, 229);
+                max-width: 800px;
+                margin: 0 auto;
+                font-family: Arial, sans-serif;
+                line-height: 1.5;
+            }
+
+            .container-post pre {
+                background-color: rgb(20, 20, 20);
+                font-size: smaller;
+                max-width: 100%;
+                padding: 6px 6px 6px 6px;
+                border-style: solid;
+                border-width: 1px;
+            }
+
+            .container-post img {
+                max-width: 100%;
+                border-style: solid;
+                border-width: 1px;
+            }
+        </style>
+    </head>   
+    <body style="background: rgb(16, 16, 16); color: rgb(253, 253, 238); font-family: 'Courier New', monospace;">
+
+        <nav>
+            <div class="nav-wrapper black">
+                <a class="brand-logo center">J. Jędra</a>
+                <a href="#" data-target="mobile-demo" class="sidenav-trigger"><i class="fa-solid fa-bars"></i></a>
+                <ul id="nav-mobile" class="right hide-on-med-and-down">
+                    <li><a href="/blog">Blog</a></li>
+                    <li><a href="/projects">Projects</a></li>
+                </ul>
+                <ul id="nav-mobile" class="left hide-on-med-and-down">
+                    <li><a href="/">About Me</a></li>
+                    <li><a href="/contact">Contact</a></li>
+                </ul>
+            </div>
+        </nav>
+
+        <div class="divider"></div>
+
+        <ul class="sidenav black" style="width:100%;" id="mobile-demo">
+            <li><a style="color: white; text-align: center; margin-top: 80px; font-size: x-large;" href="/">About Me</a></li>
+            <li><a style="color: white; text-align: center; margin-top: 20px; font-size: x-large;" href="/contact">Contact</a></li>
+            <li><a style="color: white; text-align: center; margin-top: 20px; font-size: x-large;" href="/blog">Blog</a></li>
+            <li><a style="color: white; text-align: center; margin-top: 20px; font-size: x-large;" href="/projects">Projects</a></li>
+        </ul>
+
+        <div class="container">
+            {{template "content" .}}
+        </div>
+
+        <script>
+            document.addEventListener('DOMContentLoaded', () => {
+                const elems = document.querySelectorAll('.sidenav')
+                const instances = M.Sidenav.init(elems)
+            })
+        </script>
+        <script type="module" src="https://md-block.verou.me/md-block.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+    </body>
+</html>
+
+{{ end }}
