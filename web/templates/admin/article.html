@@ -1,0 +1,180 @@
+{{ define "content" }}
+
+<div class="row">
+  <div class="col s10 m10 l5 offset-s1 offset-m1">
+      <div class="container">
+      <div class="row" style="margin-top: 40px;">
+          <form class="col s12 center-align" style="margin: 8px; color:black" action="/admin/articles/{{ .Id }}/update" method="post">
+              <span style="font-size: xx-large;">Edit article</span>
+              <div class="row" style="margin-top: 20px;">
+                <div class="input-field col s6">
+                  <textarea name="title" id="title" class="materialize-textarea">{{ .Title }}</textarea>
+                  <label for="title">Title</label>
+                </div>
+                <div class="input-field col s4 offset-s2">
+                  <label class="center-align">
+                    <input name="public" id="public" type="checkbox" class="filled-in" checked="checked" />
+                    <span>Public</span>
+                  </label>
+                </div>
+              </div>
+              <div class="row">
+                <div class="input-field col s12">
+                  <textarea name="desc" id="desc" class="materialize-textarea">{{ .Description }}</textarea>
+                  <label for="desc">Description</label>
+                </div>
+              </div>
+              <div class="row">
+                <div class="input-field col s12">
+                  <textarea name="content" id="content" class="materialize-textarea">{{ .Content }}</textarea>
+                  <label for="content">Content</label>
+                </div>
+              </div>
+              <div class="row center-align">
+                <a class="btn waves-effect waves-light modal-trigger col s3" href="#example-modal">OPEN GALLERY</a>
+                <button class="col s8 offset-s1 btn waves-effect waves-light" type="submit">UPDATE ARTICLE
+                  <i class="material-icons right">send</i>
+                </button>
+              </div>
+          </form>
+      </div>
+      <div class="row" style="margin-top: 40px;">
+        <form class="col s12 center-align" style="margin: 8px; color:black" action="/admin/articles/{{ .Id }}/delete" method="post">
+          <div class="row">
+            <div class="input-field col s12">
+              <textarea name="check" id="check" class="materialize-textarea"></textarea>
+              <label for="check">Type "I'm sure." to delete this article.</label>
+            </div>
+          </div>
+          <div class="row center-align">
+            <button disabled id="deleteBtn" class="col s8 offset-s2 btn waves-effect waves-light red" type="submit">DELETE ARTICLE
+              <i class="material-icons right">send</i>
+            </button>
+          </div>
+        </form>
+      </div>
+  </div>
+  </div>
+  <div class="col s12 m12 l7">
+      <div class="row" style="margin: 20px; color:black">
+        <div id="markdown-output"></div>
+      </div>
+  </div>
+</div>
+
+<div id="example-modal" class="modal bottom-sheet">
+  <div class="container">
+  <div class="modal-content">
+    <div class="row" style="margin: 20px; color:black">
+      <div class="col l4 m8 s10 offset-m2 offset-s1">
+        <h4>Article gallery</h4>
+        <p>Click to copy markdown script.</p>
+      </div>
+      <div class="col l4 m8 s10 offset-m2 offset-s1">
+        <form action="/admin/articles/{{ .Id }}/attach-image" enctype="multipart/form-data" method="post">
+          <div class="file-field input-field">
+            <div class="btn">
+              <span>File</span>
+              <input name="file" type="file">
+            </div>
+            <div class="file-path-wrapper">
+              <input name="filename" class="file-path validate" type="text">
+            </div>
+          </div>
+          <button class="col btn waves-effect waves-light" type="submit">UPLOAD IMAGE
+            <i class="material-icons right">send</i>
+          </button>
+        </form>
+      </div>
+    </div>
+
+    <div class="row" id="image-grid">
+        {{ range $Image := .Images }}
+        <div class="col s12 m12 l4" id="{{ $Image.Filename }}">
+          <div class="card">
+              <div class="card-image">
+                <img style="cursor: pointer;" onclick="copyMarkdownScript('{{ $Image.Filename }}')" class="responsive-img" src="/static/uploads/{{ $Image.Filename }}">
+                  <button onclick="deleteImage('{{ $Image.Filename }}')" class="btn-floating btn-small waves-effect waves-light red delete-btn"><i class="material-icons">delete</i></button>
+              </div>
+          </div>
+      </div>
+        {{ end }}
+    
+  </div>
+  </div>
+
+  </div>
+  <div class="modal-footer">
+      <a href="#!" class="modal-close waves-effect waves-green btn-flat">Close</a>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/markdown-it/13.0.2/markdown-it.min.js"></script>
+<script>
+
+async function deleteImage(filename) {
+  const url = "https://example.org/products.json";
+  try {
+    const response = await fetch("/admin/articles/delete-image?filename="+filename, {method: "POST"} );
+    if (!response.ok) {
+      throw new Error(`Response status: ${response.status}`);
+    }
+    const json = await response.json();
+    document.getElementById(filename).innerHTML = ''
+  } catch (error) {
+    console.error(error.message);
+  }
+}
+
+function copyMarkdownScript(imageName) {
+  const text = `![img](/static/uploads/${imageName})`;
+  navigator.clipboard.writeText(text);
+  alert("Copied to clipboard: " + text);
+}
+
+document.addEventListener('DOMContentLoaded', function () {
+            const modals = document.querySelectorAll('.modal');
+            M.Modal.init(modals);
+        });
+
+    const md = window.markdownit();
+    if ("{{ .Public }}" === "true") {
+      document.getElementById("public").checked = true
+    } else {
+      document.getElementById("public").checked = false
+    }
+
+    function renderMarkdown() {
+        const markdownText = `
+  # ${document.getElementById("title").value}
+  ---------------
+  ${document.getElementById("content").value}
+      `;
+      const htmlContent = md.render(markdownText);
+      document.getElementById('markdown-output').innerHTML = htmlContent;
+  }
+
+  renderMarkdown()
+
+  const textarea = document.getElementById('content');
+  textarea.addEventListener('input', (event) => {
+      renderMarkdown()
+  });
+
+  const title = document.getElementById('title');
+  title.addEventListener('input', (event) => {
+      renderMarkdown()
+  });
+
+  const check = document.getElementById('check');
+  const deleteBtn = document.getElementById('deleteBtn');
+  check.addEventListener('input', (event) => {
+      if (check.value === "I'm sure.") {
+        deleteBtn.disabled = false
+      } else {
+        deleteBtn.disabled = true
+      }
+  });
+
+</script>
+{{ end }}

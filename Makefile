@@ -7,18 +7,32 @@ build:
 	@echo "Building..."
 	
 	
-	@go build -o main cmd/api/main.go
+	@go build -o main cmd/server/main.go
 
 # Run the application
 run:
-	@go run cmd/api/main.go
+	@go run cmd/server/main.go
 
+# Database create tables
+tables:
+	@go run cmd/tables/main.go
 
+# Database create articles
+articles:
+	@go run cmd/articles/main.go
+
+# Database drop tables
+drop:
+	@go run cmd/drop/main.go
+
+# Database create superuser
+superuser:
+	@go run cmd/superuser/main.go
 
 # Test the application
 test:
 	@echo "Testing..."
-	@go test ./... -v
+	@go test ./tests/... -v
 
 
 

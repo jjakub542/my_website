@@ -1,46 +1,52 @@
 package tests
 
 import (
-	"my_website/internal/articles"
-	"my_website/internal/database"
+	"my_website/internal/domain"
+	"my_website/internal/repository"
 	"testing"
-	"time"
-
-	"github.com/google/uuid"
 )
 
 func TestArticleCreateOne(t *testing.T) {
-	repo := articles.Repository(database.Test())
-	article := &articles.Article{
-		Title:   "Siema",
-		Content: "tu jest tresc",
-		Public:  true,
+	var err error
+
+	article := &domain.Article{
+		Title:       "tytuł artykułu",
+		Description: "streszczenie/opis",
+		Content:     "Writing a custom session middleware in Go Echo involves intercepting requests to handle session creation, validation, and management. Below is a complete guide to creating a basic custom session middleware.",
+		Public:      true,
 	}
-	if err := repo.CreateOne(article); err != nil {
+
+	repo := repository.New(TestDB)
+	err = repo.Article.CreateOne(article)
+	if err != nil {
 		t.Fatal(err)
 	}
 }
 
-func TestArticleGetOneById(t *testing.T) {
-	db := database.Test()
-	a := &articles.Article{
-		Id:      uuid.NewString(),
-		Title:   "Siema",
-		Content: "tu jest tresc",
-		Public:  true,
-	}
-	_, err := db.Exec(`
-	INSERT INTO articles (id, title, content, created_at, updated_at, public)
-	VALUES ($1, $2, $3, $4, $5, $6)`, a.Id, a.Title, a.Content, time.Now(), time.Now(), a.Public)
+func TestArticleGetAll(t *testing.T) {
+	repo := repository.New(TestDB)
+	articles, err := repo.Article.GetAll()
 	if err != nil {
 		t.Fatal(err)
 	}
-	repo := articles.Repository(db)
-	article, err := repo.GetOneById(a.Id)
+	if articles[0].Title != "tytuł artykułu" {
+		t.Fail()
+	}
+	article2 := &domain.Article{
+		Title:       "tytuł artykułu po aktualizacji",
+		Description: "streszczenie/opis",
+		Content:     "Writing a custom session middleware in Go Echo involves intercepting requests to handle session creation, validation, and management. Below is a complete guide to creating a basic custom session middleware.",
+		Public:      true,
+	}
+	err = repo.Article.UpdateOneById(article2, articles[0].Id)
 	if err != nil {
 		t.Fatal(err)
 	}
-	if article.Title != a.Title {
+	articleFinal, err := repo.Article.GetOneById(articles[0].Id)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if articleFinal.Title != "tytuł artykułu po aktualizacji" {
 		t.Fail()
 	}
 }

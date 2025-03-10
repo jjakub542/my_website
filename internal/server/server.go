@@ -7,56 +7,35 @@ import (
 	"strconv"
 	"time"
 
+	"github.com/jackc/pgx/v5/pgxpool"
 	_ "github.com/joho/godotenv/autoload"
-	"github.com/labstack/echo/v4"
-	"github.com/labstack/echo/v4/middleware"
 
 	"my_website/internal/database"
+	"my_website/internal/repository"
+	"my_website/internal/session"
 )
 
 type Server struct {
-	port int
-	db   database.Service
-}
-
-func (s *Server) RegisterRoutes() http.Handler {
-	e := echo.New()
-	e.Renderer = Renderer()
-	e.Static("/static", "web/static")
-	e.Use(middleware.Logger())
-	e.Use(middleware.Recover())
-
-	e.GET("/", s.HomePage)
-	e.GET("/contact", s.ContactPage)
-	e.GET("/projects", s.ProjectsPage)
-	e.GET("/blog", s.BlogPage)
-	e.GET("/blog/:article_id", s.ArticleView)
-	e.GET("/hello", s.HelloHandler)
-	e.GET("/health", s.HealthHandler)
-
-	e.GET("/admin", s.AdminHomePage)
-	e.Any("/admin/login", s.AdminLoginPage)
-	e.Any("/admin/logout", s.AdminLogoutPage)
-	e.GET("/admin/edit-article", s.AdminArticleEditPage)
-
-	e.DELETE("/articles/delete", s.ArticleDeleteHandler)
-	e.PUT("/articles/update", s.ArticleUpdateHandler)
-
-	e.GET("/img", s.GetImageHandler)
-
-	return e
+	port       int
+	db         *pgxpool.Pool
+	store      *session.Store
+	repository *repository.Repository
 }
 
 func NewServer() *http.Server {
 	port, _ := strconv.Atoi(os.Getenv("PORT"))
+	db := database.Connect()
+	store := session.NewStore()
 	NewServer := &Server{
-		port: port,
-		db:   database.New(),
+		port:       port,
+		db:         db,
+		store:      store,
+		repository: repository.New(db),
 	}
 
 	server := &http.Server{
 		Addr:         fmt.Sprintf(":%d", NewServer.port),
-		Handler:      NewServer.RegisterRoutes(),
+		Handler:      NewServer.Router(),
 		IdleTimeout:  time.Minute,
 		ReadTimeout:  10 * time.Second,
 		WriteTimeout: 30 * time.Second,

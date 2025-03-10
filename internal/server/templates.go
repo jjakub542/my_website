@@ -34,10 +34,10 @@ func Renderer() *templateRegistry {
 	templates["blog.html"] = template.Must(template.ParseFiles("web/templates/blog.html", "web/templates/base.html"))
 	templates["article.html"] = template.Must(template.ParseFiles("web/templates/article.html", "web/templates/base.html"))
 
-	templates["admin/home.html"] = template.Must(template.ParseFiles("web/templates/admin/home.html", "web/templates/admin/base.html"))
-	templates["admin/edit_article.html"] = template.Must(template.ParseFiles("web/templates/admin/edit_article.html", "web/templates/admin/base.html"))
 	templates["admin/login.html"] = template.Must(template.ParseFiles("web/templates/admin/login.html"))
 	templates["admin/logout.html"] = template.Must(template.ParseFiles("web/templates/admin/logout.html"))
+	templates["admin/home.html"] = template.Must(template.ParseFiles("web/templates/admin/home.html", "web/templates/admin/base.html"))
+	templates["admin/article.html"] = template.Must(template.ParseFiles("web/templates/admin/article.html", "web/templates/admin/base.html"))
 
 	return &templateRegistry{
 		templates: templates,
