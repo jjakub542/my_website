@@ -29,3 +29,5 @@ tmp/
 main
 *templ.go
 sql.db
+
+web/static/uploads/*

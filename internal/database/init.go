@@ -22,7 +22,6 @@ var (
 )
 
 func Connect() *pgxpool.Pool {
-	fmt.Println(username)
 	if postgresClient != nil {
 		return postgresClient
 	}

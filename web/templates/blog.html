@@ -1,28 +1,56 @@
 {{ define "content" }}
 
-<div class="container">
+<div class="row" style="margin: 30px;">
+  <div class="col s10 m3 l3 offset s1">
+      <div class="row" style="margin-top: 20px;">
+        <p>Some content goes here,
+          Tags, recomendations etc...
+        </p>
+      </div>
+  </div>
+  <div class="col s12 m9 l9">
+      <div class="row">
+        {{ range . }}
+            <div class="col s12 m10 l4 offset-m1">
+              <div class="card">
+                <div class="card-image">
+                  <img src="/static/img/sample.jpg">
+                </div>
+                <div class="card-content">
+                  <p style="color: black">{{ .Description }}</p>
+                </div>
+                <div class="card-action">
+                  <a href="/blog/{{ .Id }}">{{ .Title }}</a>
+                </div>
+              </div>
+            </div>
+        {{ end }}
+      </div>
+  </div>
+  </div>
+</div>
+
+
+
+<!--
 <div class="row">
-
   {{ range . }}
-
-    <div class="col s12 m12 l8 offset-l2" style="margin-top: 40px;">
-      <div class="card" style="border-style: solid; border-width: 2px;">
-        <div class="card-image">
-          <img src="/static/img/sample.jpg">
-          <span class="card-title">{{ .CreatedAt }}</span>
-        </div>
-        <div class="card-action">
-            <a href="/blog/{{ .Id }}" style="font-size: larger;">{{ .Title }}</a>
-        </div>
-        <div class="card-content" style="color: black;">
-            {{ .Description }}
+      <div class="col s12 m10 l4 offset-m1">
+        <div class="card">
+          <div class="card-image">
+            <img src="/static/img/sample.jpg">
+            <span class="card-title">{{ .Title }}    {{ .CreatedAt }}</span>
+          </div>
+          <div class="card-content">
+            <p style="color: black">{{ .Description }}</p>
+          </div>
+          <div class="card-action">
+            <a href="/blog/{{ .Id }}">Go to article</a>
+          </div>
         </div>
       </div>
-    </div>
-
   {{ end }}
-
-</div>
 </div>
 
+-->
 {{ end }}
