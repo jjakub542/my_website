@@ -11,8 +11,8 @@ import (
 )
 
 var (
-	dbname             = os.Getenv("DB_NAME")
-	dbnametest         = os.Getenv("DB_NAME_TEST")
+	dbname = os.Getenv("DB_NAME")
+	// dbnametest         = os.Getenv("DB_NAME_TEST")
 	password           = os.Getenv("DB_PASSWORD")
 	username           = os.Getenv("DB_USERNAME")
 	port               = os.Getenv("DB_PORT")
@@ -75,19 +75,30 @@ func InitTables(db *pgxpool.Pool, path string) error {
 }
 
 func DropTables(db *pgxpool.Pool) error {
-	var err error
 
-	_, err = db.Exec(context.Background(), `
+	_, err1 := db.Exec(context.Background(), `
 	DROP TABLE articles;
 	`)
 
-	_, err = db.Exec(context.Background(), `
+	if err1 == nil {
+		return err1
+	}
+
+	_, err2 := db.Exec(context.Background(), `
 	DROP TABLE users;
 	`)
 
-	_, err = db.Exec(context.Background(), `
+	if err2 == nil {
+		return err2
+	}
+
+	_, err3 := db.Exec(context.Background(), `
 	DROP TABLE images;
 	`)
 
-	return err
+	if err3 == nil {
+		return err3
+	}
+
+	return nil
 }
