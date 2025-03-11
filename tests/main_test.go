@@ -9,13 +9,22 @@ import (
 	"testing"
 
 	"github.com/jackc/pgx/v5/pgxpool"
+	_ "github.com/joho/godotenv/autoload"
 )
 
-var TestDB *pgxpool.Pool
+var (
+	dbname   = os.Getenv("DB_NAME")
+	password = os.Getenv("DB_PASSWORD")
+	username = os.Getenv("DB_USERNAME")
+	port     = os.Getenv("DB_PORT")
+	host     = os.Getenv("DB_HOST")
+	TestDB   *pgxpool.Pool
+)
 
 func TestMain(m *testing.M) {
 	var err error
-	connStr := fmt.Sprintf("postgres://%s:%s@%s:%s/%s", "offgrid_admin", "offgrid123", "localhost", "5432", "offgrid_db_test")
+	fmt.Println(dbname, port, password, username)
+	connStr := fmt.Sprintf("postgres://%s:%s@%s:%s/%s", username, password, host, port, dbname)
 	TestDB, err = pgxpool.New(context.Background(), connStr)
 	if err != nil {
 		log.Fatal(err)

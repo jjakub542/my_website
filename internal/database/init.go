@@ -11,13 +11,12 @@ import (
 )
 
 var (
-	database           = os.Getenv("DB_NAME")
-	password           = os.Getenv("DB_PASSWORD")
-	username           = os.Getenv("DB_USERNAME")
-	port               = os.Getenv("DB_PORT")
-	host               = os.Getenv("DB_HOST")
-	postgresClient     *pgxpool.Pool
-	postgresClientTest *pgxpool.Pool
+	database       = os.Getenv("DB_NAME")
+	password       = os.Getenv("DB_PASSWORD")
+	username       = os.Getenv("DB_USERNAME")
+	port           = os.Getenv("DB_PORT")
+	host           = os.Getenv("DB_HOST")
+	postgresClient *pgxpool.Pool
 )
 
 func Connect() *pgxpool.Pool {
