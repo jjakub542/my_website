@@ -44,6 +44,34 @@ func (p *postgresArticleRepository) GetAll() ([]domain.Article, error) {
 	return articles, nil
 }
 
+func (p *postgresArticleRepository) GetAllPublic() ([]domain.Article, error) {
+	var articles []domain.Article
+	sql := `SELECT * FROM articles WHERE public=true ORDER BY created_at DESC;`
+	rows, err := p.db.Query(context.Background(), sql)
+	if err != nil {
+		return articles, err
+	}
+	for rows.Next() {
+		var article domain.Article
+		if err := rows.Scan(
+			&article.Id,
+			&article.Title,
+			&article.Description,
+			&article.Content,
+			&article.CreatedAt,
+			&article.UpdatedAt,
+			&article.Public,
+		); err != nil {
+			return articles, err
+		}
+		articles = append(articles, article)
+	}
+	if err = rows.Err(); err != nil {
+		return articles, err
+	}
+	return articles, nil
+}
+
 func (p *postgresArticleRepository) GetOneById(id string) (*domain.Article, error) {
 	var article domain.Article
 	sql := `SELECT * FROM articles WHERE id=$1;`

@@ -2,10 +2,28 @@
 
 <div class="row" style="margin-top: 20px; border-width: 1px;">
     <div class="col l8 m10 s12 offset-l2 offset-m1" style="padding-left: 2%; padding-right: 2%; padding-top: 4px; padding-bottom: 4px;">
-        <md-block class="container-post">
-            {{ .Content }}
-        </md-block>
+        <div class="row" style="margin: 20px; color:black">
+            <div id="markdown-output"></div>
+        </div>
     </div>
 </div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/markdown-it/13.0.2/markdown-it.min.js"></script>
+
+<script>
+
+const md = window.markdownit();
+        function renderMarkdown() {
+        const markdownText = `
+  # ${'{{ .Title }}'}
+  ---------------
+  ${'{{ .Content }}'}
+      `;
+      const htmlContent = md.render(markdownText);
+      document.getElementById('markdown-output').innerHTML = htmlContent;
+  }
+
+  renderMarkdown()
+</script>
 
 {{ end }} 

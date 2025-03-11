@@ -22,7 +22,7 @@ type Article struct {
 	CreatedAt   time.Time `json:"created_at"`
 	UpdatedAt   time.Time `json:"updated_at"`
 	Public      bool      `json:"public"`
-	Images      []Image
+	Images      []Image   `json:"images"`
 }
 
 func (i *Image) Save(src multipart.File) error {
@@ -52,6 +52,7 @@ func (i *Image) GetUrl() string {
 
 type ArticleRepository interface {
 	GetAll() ([]Article, error)
+	GetAllPublic() ([]Article, error)
 	GetOneById(string) (*Article, error)
 	CreateOne(*Article) error
 	UpdateOneById(*Article, string) error

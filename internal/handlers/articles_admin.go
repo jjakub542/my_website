@@ -63,7 +63,7 @@ func (h *Handler) ArticleUpdate(c echo.Context) error {
 	if err != nil {
 		return echo.NewHTTPError(http.StatusInternalServerError, "Internal server error")
 	}
-	return c.Redirect(http.StatusSeeOther, "/admin")
+	return c.Redirect(http.StatusSeeOther, "/admin/articles")
 }
 
 func (h *Handler) ArticleAttachImage(c echo.Context) error {

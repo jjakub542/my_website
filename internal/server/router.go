@@ -22,8 +22,8 @@ func (s *Server) Router() http.Handler {
 	e.GET("/", h.HomePage)
 	e.GET("/contact", h.ContactPage)
 	e.GET("/projects", h.ProjectsPage)
-	//e.GET("/blog", s.BlogPage)
-	//e.GET("/blog/:article_id", s.ArticleView)
+	e.GET("/blog", h.BlogPage)
+	e.GET("/blog/:article_id", h.ArticleView)
 
 	adminGroup := e.Group("/admin")
 	adminGroup.GET("/articles", session.AdminAuth(h.AdminHomePage))
