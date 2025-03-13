@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"net/http"
+	"strconv"
 
 	"github.com/labstack/echo/v4"
 )
@@ -11,7 +12,13 @@ func (h *Handler) HomePage(c echo.Context) error {
 }
 
 func (h *Handler) BlogPage(c echo.Context) error {
-	articles, err := h.Repository.Article.GetAll()
+	page, _ := strconv.Atoi(c.QueryParam("page"))
+	if page < 1 {
+		page = 1
+	}
+	limit := 8
+	offset := (page - 1) * limit
+	articles, err := h.Repository.Article.GetAllPublicBetween(limit, offset)
 	if err != nil {
 		return echo.NewHTTPError(http.StatusInternalServerError, err)
 	}

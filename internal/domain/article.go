@@ -53,6 +53,7 @@ func (i *Image) GetUrl() string {
 type ArticleRepository interface {
 	GetAll() ([]Article, error)
 	GetAllPublic() ([]Article, error)
+	GetAllPublicBetween(int, int) ([]Article, error)
 	GetOneById(string) (*Article, error)
 	CreateOne(*Article) error
 	UpdateOneById(*Article, string) error
