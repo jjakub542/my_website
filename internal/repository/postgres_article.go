@@ -44,6 +44,15 @@ func (p *postgresArticleRepository) GetAll() ([]domain.Article, error) {
 	return articles, nil
 }
 
+func (p *postgresArticleRepository) GetCount() (int, error) {
+	var count int
+	err := p.db.QueryRow(context.Background(), "SELECT COUNT(*) FROM articles").Scan(&count)
+	if err != nil {
+		return 0, err
+	}
+	return count, nil
+}
+
 func (p *postgresArticleRepository) GetAllPublicBetween(limit int, offset int) ([]domain.Article, error) {
 	var articles []domain.Article
 	sql := `SELECT * FROM articles WHERE public=true ORDER BY created_at DESC LIMIT $1 OFFSET $2;`

@@ -22,7 +22,14 @@ func (h *Handler) BlogPage(c echo.Context) error {
 	if err != nil {
 		return echo.NewHTTPError(http.StatusInternalServerError, err)
 	}
-	return c.Render(http.StatusOK, "blog.html", articles)
+	count, err := h.Repository.Article.GetCount()
+	if err != nil {
+		return echo.NewHTTPError(http.StatusInternalServerError, err)
+	}
+	return c.Render(http.StatusOK, "blog.html", map[string]interface{}{
+		"articles": articles,
+		"count":    count,
+	})
 }
 
 func (h *Handler) ContactPage(c echo.Context) error {

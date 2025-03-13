@@ -54,6 +54,7 @@ type ArticleRepository interface {
 	GetAll() ([]Article, error)
 	GetAllPublic() ([]Article, error)
 	GetAllPublicBetween(int, int) ([]Article, error)
+	GetCount() (int, error)
 	GetOneById(string) (*Article, error)
 	CreateOne(*Article) error
 	UpdateOneById(*Article, string) error
